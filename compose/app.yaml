@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  router:
+    build:
+      context: ../app/friendlyfl-router
+    image: friendlyfl-router
+    ports:
+      - '8001:8000'
+    env_file:
+      - ../config/router.env
+    volumes:
+      - router_artifacts:/friendlyfl/artifacts
+
+  controller:
+    build:
+      context: ../app/friendlyfl-controller
+    image: friendlyfl-controller
+    ports:
+      - '8000:8000'
+    env_file:
+      - ../config/controller.env
+    volumes:
+      - controller_artifacts:/friendlyfl/artifacts
+
+  redis:
+    image: redis:5.0
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/opt/redis/data
+
+  postgres:
+    image: postgres:12.9
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: UCalgary123
+
+volumes:
+  postgres_data: {}
+  router_artifacts: {}
+  controller_artifacts: {}
+  redis_data: {}

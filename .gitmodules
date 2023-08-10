@@ -1,0 +1,8 @@
+[submodule "app/friendlyfl-controller"]
+	path = app/friendlyfl-controller
+	url = git@github.com:denoslab/friendlyfl-controller.git
+	branch = main
+[submodule "app/friendlyfl-router"]
+	path = app/friendlyfl-router
+	url = git@github.com:denoslab/friendlyfl-router.git
+	branch = main

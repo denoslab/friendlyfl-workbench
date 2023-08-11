@@ -5,6 +5,8 @@ services:
     build:
       context: ../app/friendlyfl-router
     image: friendlyfl-router
+    depends_on:
+      - postgres
     ports:
       - '8001:8000'
     env_file:
@@ -16,12 +18,49 @@ services:
     build:
       context: ../app/friendlyfl-controller
     image: friendlyfl-controller
+    depends_on:
+      - postgres
+      - redis
     ports:
       - '8000:8000'
     env_file:
       - ../config/controller.env
     volumes:
       - controller_artifacts:/friendlyfl/artifacts
+
+  controller-scheduler:
+    build:
+      context: ../app/friendlyfl-controller
+    image: friendlyfl-controller
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - ../config/controller.env
+    entrypoint: ["poetry", "run", "celery", "-A", "friendlyfl", "beat", "-l", "DEBUG"]
+
+  controller-run-worker:
+    build:
+      context: ../app/friendlyfl-controller
+    image: friendlyfl-controller
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - ../config/controller.env
+    entrypoint: ["poetry", "run", "celery", "-A", "friendlyfl", "worker", "-l", "DEBUG", "-Q", "friendlyfl.run"]
+
+  controller-processor-worker:
+    build:
+      context: ../app/friendlyfl-controller
+    image: friendlyfl-controller
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - ../config/controller.env
+    entrypoint: ["poetry", "run", "celery", "-A", "friendlyfl", "worker", "-l", "DEBUG", "-Q", "friendlyfl.processor"]
+
 
   redis:
     image: redis:5.0

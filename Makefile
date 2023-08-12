@@ -15,6 +15,9 @@ controller:
 update:
 	git submodule update --init --remote
 
+up:
+	${COMPOSE} up -d
+
 down:
 	${COMPOSE} down
 

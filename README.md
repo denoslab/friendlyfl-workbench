@@ -46,6 +46,7 @@ to start all services and dependencies.
 >``` 
 >to go into the container and run 
 >```
+>poetry run python3 manage.py migrate
 >poetry run python3 manage.py createsuperuser
 >``` 
 >to create a superuser. 

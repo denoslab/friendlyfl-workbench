@@ -8,7 +8,7 @@ services:
     depends_on:
       - postgres
     ports:
-      - '8001:8000'
+      - '8000:8000'
     env_file:
       - ../config/router.env
     command: bash -c "cron && poetry run python3 manage.py runserver 0.0.0.0:8000"
@@ -23,11 +23,11 @@ services:
       - postgres
       - redis
     ports:
-      - '8000:8000'
+      - '8001:8000'
     env_file:
       - ../config/controller.env
     volumes:
-      - controller_artifacts:/friendlyfl/artifacts
+      - controller_artifacts:/friendlyfl-controller/local
 
   controller-scheduler:
     build:
@@ -39,6 +39,8 @@ services:
     env_file:
       - ../config/controller.env
     entrypoint: ["poetry", "run", "celery", "-A", "friendlyfl", "beat", "-l", "DEBUG"]
+    volumes:
+      - controller_artifacts:/friendlyfl-controller/local
 
   controller-run-worker:
     build:
@@ -50,6 +52,8 @@ services:
     env_file:
       - ../config/controller.env
     entrypoint: ["poetry", "run", "celery", "-A", "friendlyfl", "worker", "-l", "DEBUG", "-Q", "friendlyfl.run"]
+    volumes:
+      - controller_artifacts:/friendlyfl-controller/local
 
   controller-processor-worker:
     build:
@@ -61,6 +65,8 @@ services:
     env_file:
       - ../config/controller.env
     entrypoint: ["poetry", "run", "celery", "-A", "friendlyfl", "worker", "-l", "DEBUG", "-Q", "friendlyfl.processor"]
+    volumes:
+      - controller_artifacts:/friendlyfl-controller/local
 
 
   redis:

@@ -21,7 +21,12 @@ Execute the following to update to the latest commit:
 ### Compile
 We are using [make](https://www.gnu.org/software/make/manual/make.html) utility for easier maintaince. 
 
-Run `make build` to compile all services. Or specify `make router` or `make controller` to only compile and build docker image for specific service.
+Run `make build` to compile all services. 
+```
+make build
+```
+
+Or specify `make router` or `make controller` to only compile and build docker image for specific service.
 
 
 ### Run and Stop
